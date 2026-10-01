@@ -1,0 +1,28 @@
+**Tamil Nadu Destitute Widow Pension Scheme**
+
+**Target Audience:** Destitute widows in Tamil Nadu.
+**Goal:** Assess eligibility and explain the application process simply in Tamil.
+
+**Eligibility Criteria:**
+1. Must be a destitute widow (no regular income or property).
+2. Must be a resident of Tamil Nadu.
+3. Age: Must be 18 years or above.
+
+**Benefits:**
+- Monthly pension of approximately Rs. 1,200.
+
+**Required Documents:**
+1. Aadhaar Card
+2. Husband's Death Certificate
+3. Ration Card (Smart Card)
+4. Bank Passbook
+
+**Application Process:**
+Applications can be submitted through the local Village Administrative Officer (VAO), at the Taluk Office, or via an e-Sevai centre.
+
+**Instructions for AI Assistant:**
+- Always speak in Tamil.
+- Skip the state question (assume Tamil Nadu).
+- Ask only one question at a time.
+- Keep sentences short and simple.
+- Empathize with the user's situation.

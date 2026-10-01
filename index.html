@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="te">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>సఖి / சகி</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Telugu:wght@400;600;700;800&family=Noto+Sans+Tamil:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-color: #1c2459;
+      --text-color: #fff8e7;
+      --marigold: #f6b800;
+      --rose: #e0457b;
+      --white: #ffffff;
+      --card-bg: rgba(255, 248, 231, 0.08);
+      --border-color: rgba(246, 184, 0, 0.4);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      font-family: 'Noto Sans Telugu', 'Noto Sans Tamil', sans-serif;
+      min-height: 100vh;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.5rem 1rem;
+      text-align: center;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    .reset-btn {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      font-size: 1.5rem;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text-color);
+      transition: transform 0.2s;
+    }
+    .reset-btn:active {
+      transform: rotate(90deg);
+    }
+
+    .app-container {
+      width: 100%;
+      max-width: 480px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      flex: 1;
+      gap: 1.25rem;
+      margin-top: 2rem;
+    }
+
+    .header-section {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .app-title {
+      font-size: 2.75rem;
+      font-weight: 800;
+      color: var(--marigold);
+      letter-spacing: 1px;
+      line-height: 1.2;
+      text-shadow: 0 2px 12px rgba(246, 184, 0, 0.25);
+    }
+
+    .caption-box {
+      width: 100%;
+      min-height: 5.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.5rem 1rem;
+    }
+
+    .caption-text {
+      font-size: clamp(1.2rem, 4vw, 1.55rem);
+      font-weight: 700;
+      line-height: 1.6;
+      color: var(--text-color);
+      transition: color 0.3s ease;
+      white-space: normal;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      text-align: center;
+      max-width: 340px;
+      margin: 0 auto;
+    }
+
+    .docs-container {
+      width: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0 0.25rem;
+      transition: opacity 0.3s ease;
+    }
+
+    .docs-container.hidden {
+      display: none;
+    }
+
+    .doc-card {
+      background: var(--card-bg);
+      border: 2px solid var(--border-color);
+      border-radius: 12px;
+      padding: 0.6rem 0.4rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.25rem;
+      min-width: 75px;
+      flex: 1 1 calc(31% - 0.5rem);
+      max-width: 105px;
+    }
+
+    .doc-emoji {
+      font-size: 1.85rem;
+      line-height: 1;
+    }
+
+    .doc-label {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--text-color);
+      line-height: 1.25;
+      text-align: center;
+      white-space: normal;
+      word-break: break-word;
+    }
+
+    .place-box {
+      width: 100%;
+      background: rgba(246, 184, 0, 0.1);
+      border-left: 5px solid var(--marigold);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      text-align: left;
+      font-size: 1.15rem;
+      font-weight: 600;
+      line-height: 1.6;
+      color: var(--text-color);
+    }
+
+    .place-box.hidden {
+      display: none;
+    }
+
+    .voice-control-area {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin: 1.5rem 0 1rem;
+      width: 100%;
+    }
+
+    .mic-wrapper {
+      position: relative;
+      width: 250px;
+      height: 250px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .ring {
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+      box-sizing: border-box;
+      transition: all 0.4s ease;
+    }
+
+    .ring-1 {
+      width: 175px;
+      height: 175px;
+      border: 2px dashed rgba(246, 184, 0, 0.45);
+    }
+
+    .ring-2 {
+      width: 210px;
+      height: 210px;
+      border: 2px dotted rgba(246, 184, 0, 0.35);
+    }
+
+    .ring-3 {
+      width: 245px;
+      height: 245px;
+      border: 2px solid rgba(246, 184, 0, 0.2);
+    }
+
+    .mic-button {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      background-color: var(--marigold);
+      color: #1c2459;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      z-index: 5;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45);
+      transition: transform 0.2s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .mic-button:focus-visible {
+      outline: 4px solid var(--white);
+      outline-offset: 6px;
+    }
+
+    .mic-button:active {
+      transform: scale(0.95);
+    }
+
+    .mic-icon {
+      width: 64px;
+      height: 64px;
+      fill: #1c2459;
+      transition: fill 0.3s ease;
+    }
+
+    .spinner-ring {
+      display: none;
+      position: absolute;
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      border: 6px solid rgba(28, 36, 89, 0.2);
+      border-top-color: #1c2459;
+      animation: spin 1s linear infinite;
+    }
+
+    .replay-button {
+      background: transparent;
+      border: 2px solid var(--border-color);
+      color: var(--text-color);
+      font-family: inherit;
+      font-size: 1.15rem;
+      font-weight: 700;
+      padding: 0.65rem 1.6rem;
+      border-radius: 9999px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 0.75rem;
+      transition: all 0.2s ease;
+    }
+
+    .replay-button:hover {
+      background: rgba(246, 184, 0, 0.15);
+      border-color: var(--marigold);
+    }
+
+    .replay-button:focus-visible {
+      outline: 3px solid var(--marigold);
+      outline-offset: 4px;
+    }
+
+    .replay-button:active {
+      transform: scale(0.97);
+    }
+
+    .replay-button.hidden {
+      visibility: hidden;
+      opacity: 0;
+      display: none;
+    }
+
+    .lang-buttons {
+      display: flex;
+      gap: 1.5rem;
+      margin-top: 1rem;
+      justify-content: center;
+    }
+
+    .lang-buttons.hidden {
+      display: none;
+    }
+
+    .lang-btn {
+      background: var(--card-bg);
+      border: 2px solid var(--border-color);
+      color: var(--text-color);
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 1.35rem;
+      font-family: inherit;
+    }
+
+    .lang-btn:hover {
+      background: rgba(246, 184, 0, 0.15);
+    }
+
+    body.listening .mic-button {
+      background-color: var(--rose);
+      box-shadow: 0 0 30px rgba(224, 69, 123, 0.6);
+    }
+
+    body.listening .mic-icon { fill: var(--white); }
+    body.listening .ring-1 { border: 3px solid var(--rose); animation: pulse-rose-1 1.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite; }
+    body.listening .ring-2 { border: 2px solid var(--rose); animation: pulse-rose-2 1.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite 0.25s; }
+    body.listening .ring-3 { border: 2px solid var(--rose); animation: pulse-rose-3 1.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite 0.5s; }
+
+    body.thinking .mic-button { background-color: var(--marigold); }
+    body.thinking .spinner-ring { display: block; }
+    body.thinking .mic-icon { opacity: 0.35; }
+    body.thinking .ring { opacity: 0.2; }
+
+    body.speaking .mic-button { background-color: var(--marigold); }
+    body.speaking .ring-1 { border: 3px solid var(--white); animation: pulse-white-1 1.8s ease-out infinite; }
+    body.speaking .ring-2 { border: 2px solid var(--white); animation: pulse-white-2 1.8s ease-out infinite 0.3s; }
+    body.speaking .ring-3 { border: 2px solid var(--white); animation: pulse-white-3 1.8s ease-out infinite 0.6s; }
+
+    @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    @keyframes pulse-rose-1 { 0% { transform: scale(0.9); opacity: 0.9; } 50% { transform: scale(1.08); opacity: 0.5; } 100% { transform: scale(0.9); opacity: 0.9; } }
+    @keyframes pulse-rose-2 { 0% { transform: scale(0.92); opacity: 0.7; } 50% { transform: scale(1.12); opacity: 0.35; } 100% { transform: scale(0.92); opacity: 0.7; } }
+    @keyframes pulse-rose-3 { 0% { transform: scale(0.95); opacity: 0.5; } 50% { transform: scale(1.18); opacity: 0.15; } 100% { transform: scale(0.95); opacity: 0.5; } }
+    @keyframes pulse-white-1 { 0% { transform: scale(1); opacity: 0.9; } 100% { transform: scale(1.15); opacity: 0; } }
+    @keyframes pulse-white-2 { 0% { transform: scale(1); opacity: 0.8; } 100% { transform: scale(1.25); opacity: 0; } }
+    @keyframes pulse-white-3 { 0% { transform: scale(1); opacity: 0.6; } 100% { transform: scale(1.35); opacity: 0; } }
+
+    @media (prefers-reduced-motion: reduce) {
+      .ring, .mic-button, .spinner-ring { animation: none !important; transition: none !important; }
+    }
+  </style>
+</head>
+<body class="idle">
+  <button id="reset-btn" class="reset-btn" aria-label="Reset">🔄</button>
+  <div class="app-container">
+    <header class="header-section">
+      <h1 class="app-title" id="app-title-el">సఖి / சகி</h1>
+    </header>
+
+    <section class="caption-box" aria-live="polite">
+      <div id="caption" class="caption-text">నమస్కారం / வணக்கம்</div>
+    </section>
+
+    <section id="docs-container" class="docs-container hidden" aria-label="Documents"></section>
+    <section id="place-box" class="place-box hidden" aria-live="polite"></section>
+
+    <div id="lang-buttons" class="lang-buttons hidden">
+      <button class="lang-btn" data-lang="te">తెలుగు</button>
+      <button class="lang-btn" data-lang="ta">தமிழ்</button>
+    </div>
+
+    <div class="voice-control-area">
+      <div class="mic-wrapper">
+        <div class="ring ring-1"></div>
+        <div class="ring ring-2"></div>
+        <div class="ring ring-3"></div>
+        <button id="mic-btn" class="mic-button" type="button" aria-label="మాట్లాడండి">
+          <svg class="mic-icon" viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+            <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
+            <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
+          </svg>
+          <div class="spinner-ring" aria-hidden="true"></div>
+        </button>
+      </div>
+
+      <button id="replay-btn" class="replay-button hidden" type="button">
+        🔁 మళ్ళీ చెప్పండి
+      </button>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const body = document.body;
+      const micBtn = document.getElementById('mic-btn');
+      const replayBtn = document.getElementById('replay-btn');
+      const resetBtn = document.getElementById('reset-btn');
+      const captionEl = document.getElementById('caption');
+      const docsContainer = document.getElementById('docs-container');
+      const placeBox = document.getElementById('place-box');
+      const langButtonsBox = document.getElementById('lang-buttons');
+      const appTitleEl = document.getElementById('app-title-el');
+
+      let conversationHistory = [];
+      let currentState = 'idle'; // idle | listening | thinking | speaking
+      let lastSpokenText = '';
+      let currentAudio = null;
+      let currentLang = null; // null | 'te' | 'ta'
+      let detectRetries = 0;
+
+      let mediaStream = null;
+      let mediaRecorder = null;
+      let audioChunks = [];
+      let audioContext = null;
+      let analyser = null;
+      let silenceCheckInterval = null;
+      let maxRecordingTimeout = null;
+      let hasDetectedSpeech = false;
+      let silenceStartTime = null;
+
+      const UI_CONFIG = {
+        "te": {
+            "welcome_text": "నమస్కారం అమ్మా, నేను సఖిని. మీకు సహాయం చేస్తాను. ముందుగా చెప్పండి, మీ భర్త చనిపోయారా?",
+            "ui_strings": {
+                "idle": "నమస్కారం",
+                "repeat": "🔁 మళ్ళీ వినండి",
+                "didnt_hear": "మీరు చెప్పింది వినపడలేదు.",
+                "error": "ఏదో తప్పు జరిగింది."
+            },
+            "doc_labels": {
+                "aadhaar": { emoji: '🪪', label: 'ఆధార్ కార్డు' },
+                "deathcert": { emoji: '📜', label: 'మరణ ధృవీకరణ పత్రం' },
+                "ration": { emoji: '🍚', label: 'రేషన్ కార్డు' },
+                "passbook": { emoji: '🏦', label: 'బ్యాంకు పాస్ బుక్' },
+                "photo": { emoji: '📷', label: 'పాస్ పోర్ట్ ఫోటో' }
+            }
+        },
+        "ta": {
+            "welcome_text": "வணக்கம் அம்மா, நான் சகி. உங்களுக்கு உதவுகிறேன். முதலில் சொல்லுங்கள், உங்கள் கணவர் இறந்துவிட்டாரா?",
+            "ui_strings": {
+                "idle": "வணக்கம்",
+                "repeat": "🔁 மீண்டும் சொல்லுங்கள்",
+                "didnt_hear": "நீங்கள் சொல்வது கேட்கவில்லை.",
+                "error": "ஏதோ தவறு நடந்துவிட்டது."
+            },
+            "doc_labels": {
+                "aadhaar": { emoji: '🪪', label: 'ஆதார் அட்டை' },
+                "deathcert": { emoji: '📜', label: 'இறப்பு சான்றிதழ்' },
+                "ration": { emoji: '🍚', label: 'ரேஷன் அட்டை' },
+                "passbook": { emoji: '🏦', label: 'வங்கி புத்தகம்' },
+                "photo": { emoji: '📷', label: 'பாஸ்போர்ட் புகைப்படம்' }
+            }
+        }
+      };
+
+      function setState(newState) {
+        currentState = newState;
+        body.className = newState;
+      }
+
+      function setCaption(text) {
+        captionEl.textContent = text;
+      }
+
+      function stopCurrentAudio() {
+        if (currentAudio) {
+          try {
+            currentAudio.pause();
+            currentAudio.currentTime = 0;
+          } catch (e) {}
+          currentAudio = null;
+        }
+      }
+
+      async function speakText(text, onEndedCallback, langOverride) {
+        stopCurrentAudio();
+        setState('speaking');
+
+        try {
+          const langToUse = langOverride || currentLang || 'te';
+          const res = await fetch('/api/tts', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ text: text, lang: langToUse })
+          });
+
+          if (!res.ok) throw new Error('TTS network error: ' + res.status);
+
+          const blob = await res.blob();
+          const audioUrl = URL.createObjectURL(blob);
+          const audio = new Audio(audioUrl);
+          currentAudio = audio;
+
+          audio.onended = function () {
+            currentAudio = null;
+            if (onEndedCallback) {
+              onEndedCallback();
+            } else {
+              setState('idle');
+            }
+          };
+
+          audio.onerror = function () {
+            currentAudio = null;
+            setState('idle');
+            if (onEndedCallback) onEndedCallback();
+          };
+
+          await audio.play();
+        } catch (err) {
+          console.error('TTS playback error:', err);
+          setState('idle');
+          if (onEndedCallback) onEndedCallback();
+        }
+      }
+
+      function speakBilingualPrompt(onEndedCallback) {
+        speakText("తెలుగు కోసం నమస్కారం అనండి.", function() {
+          speakText("தமிழுக்கு வணக்கம் என்று சொல்லுங்கள்.", function() {
+            if (onEndedCallback) onEndedCallback();
+          }, "ta");
+        }, "te");
+      }
+
+      function renderDocs(docsList) {
+        docsContainer.innerHTML = '';
+        if (!Array.isArray(docsList) || docsList.length === 0 || !currentLang) {
+          docsContainer.classList.add('hidden');
+          return;
+        }
+
+        const map = UI_CONFIG[currentLang].doc_labels;
+        let addedCount = 0;
+        docsList.forEach(function (docKey) {
+          const key = String(docKey).toLowerCase().trim();
+          if (map[key]) {
+            addedCount++;
+            const card = document.createElement('div');
+            card.className = 'doc-card';
+            card.innerHTML = `
+              <span class="doc-emoji" aria-hidden="true">${map[key].emoji}</span>
+              <span class="doc-label">${map[key].label}</span>
+            `;
+            docsContainer.appendChild(card);
+          }
+        });
+
+        if (addedCount > 0) docsContainer.classList.remove('hidden');
+        else docsContainer.classList.add('hidden');
+      }
+
+      function renderPlace(placeText) {
+        if (placeText && placeText.trim().length > 0) {
+          placeBox.textContent = placeText.trim();
+          placeBox.classList.remove('hidden');
+        } else {
+          placeBox.textContent = '';
+          placeBox.classList.add('hidden');
+        }
+      }
+
+      function lockLanguage(lang) {
+        currentLang = lang;
+        langButtonsBox.classList.add('hidden');
+        const config = UI_CONFIG[lang];
+        appTitleEl.textContent = lang === 'te' ? 'సఖి' : 'சகி';
+        replayBtn.textContent = config.ui_strings.repeat;
+        setCaption(config.welcome_text);
+        lastSpokenText = config.welcome_text;
+        replayBtn.classList.remove('hidden');
+        
+        speakText(config.welcome_text, function() {
+            startListening();
+        });
+      }
+
+      function resetApp() {
+        stopCurrentAudio();
+        stopListening();
+        currentLang = null;
+        detectRetries = 0;
+        conversationHistory = [];
+        lastSpokenText = '';
+        setCaption("నమస్కారం / வணக்கம்");
+        appTitleEl.textContent = "సఖి / சகி";
+        docsContainer.classList.add('hidden');
+        placeBox.classList.add('hidden');
+        replayBtn.classList.add('hidden');
+        langButtonsBox.classList.add('hidden');
+        setState('idle');
+      }
+
+      resetBtn.addEventListener('click', resetApp);
+
+      document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const lang = this.getAttribute('data-lang');
+          lockLanguage(lang);
+        });
+      });
+
+      async function startListening() {
+        stopCurrentAudio();
+        setState('listening');
+        audioChunks = [];
+        hasDetectedSpeech = false;
+        silenceStartTime = null;
+
+        const recordingStartTime = Date.now();
+        let ambientNoiseBaseline = 10;
+        let ambientSamples = [];
+
+        try {
+          mediaStream = await navigator.mediaDevices.getUserMedia({
+            audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true }
+          });
+
+          let mimeType = 'audio/webm';
+          if (typeof MediaRecorder.isTypeSupported === 'function') {
+            if (MediaRecorder.isTypeSupported('audio/webm;codecs=opus')) mimeType = 'audio/webm;codecs=opus';
+            else if (MediaRecorder.isTypeSupported('audio/mp4')) mimeType = 'audio/mp4';
+            else if (MediaRecorder.isTypeSupported('audio/ogg;codecs=opus')) mimeType = 'audio/ogg;codecs=opus';
+          }
+
+          mediaRecorder = new MediaRecorder(mediaStream, { mimeType: mimeType });
+
+          const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+          if (AudioContextClass) {
+            audioContext = new AudioContextClass();
+            if (audioContext.state === 'suspended') await audioContext.resume();
+            const source = audioContext.createMediaStreamSource(mediaStream);
+            analyser = audioContext.createAnalyser();
+            analyser.fftSize = 256;
+            analyser.smoothingTimeConstant = 0.4;
+            source.connect(analyser);
+
+            const bufferLength = analyser.frequencyBinCount;
+            const dataArray = new Uint8Array(bufferLength);
+            const ring1 = document.querySelector('.ring-1');
+            const ring2 = document.querySelector('.ring-2');
+
+            silenceCheckInterval = setInterval(function () {
+              if (currentState !== 'listening') return;
+              analyser.getByteFrequencyData(dataArray);
+              let sum = 0;
+              for (let i = 0; i < bufferLength; i++) sum += dataArray[i];
+              const averageVolume = sum / bufferLength;
+              const elapsedMs = Date.now() - recordingStartTime;
+
+              if (elapsedMs < 400) {
+                ambientSamples.push(averageVolume);
+                if (ambientSamples.length > 3) {
+                  const ambSum = ambientSamples.reduce((a, b) => a + b, 0);
+                  ambientNoiseBaseline = Math.max(8, ambSum / ambientSamples.length);
+                }
+                return;
+              }
+
+              const speechTrigger = Math.max(14, ambientNoiseBaseline + 6);
+              const silenceTrigger = Math.max(10, ambientNoiseBaseline + 2);
+
+              if (ring1 && ring2) {
+                const voiceScale = Math.min(1.22, 1 + (averageVolume / 180));
+                ring1.style.transform = `scale(${voiceScale})`;
+              }
+
+              if (averageVolume > speechTrigger) {
+                hasDetectedSpeech = true;
+                silenceStartTime = null;
+              } else if (hasDetectedSpeech && averageVolume < silenceTrigger) {
+                if (elapsedMs > 1200) {
+                  const now = Date.now();
+                  if (!silenceStartTime) silenceStartTime = now;
+                  else if (now - silenceStartTime > 1400) {
+                    stopListening();
+                  }
+                }
+              } else if (hasDetectedSpeech && averageVolume >= silenceTrigger) {
+                silenceStartTime = null;
+              }
+            }, 60);
+          }
+
+          maxRecordingTimeout = setTimeout(function () {
+            if (currentState === 'listening') stopListening();
+          }, 15000);
+
+          mediaRecorder.ondataavailable = function (e) {
+            if (e.data && e.data.size > 0) audioChunks.push(e.data);
+          };
+
+          mediaRecorder.onstop = async function () {
+            cleanupAudioNodes();
+            const audioBlob = new Blob(audioChunks, { type: mimeType });
+            await processAudioRecording(audioBlob);
+          };
+
+          mediaRecorder.start(200);
+        } catch (err) {
+          console.error('Mic access error:', err);
+          cleanupAudioNodes();
+          const errText = currentLang ? UI_CONFIG[currentLang].ui_strings.error : "Error";
+          setCaption(errText);
+          speakText(errText);
+        }
+      }
+
+      function cleanupAudioNodes() {
+        if (silenceCheckInterval) { clearInterval(silenceCheckInterval); silenceCheckInterval = null; }
+        if (maxRecordingTimeout) { clearTimeout(maxRecordingTimeout); maxRecordingTimeout = null; }
+        if (audioContext) { try { audioContext.close(); } catch (e) {} audioContext = null; analyser = null; }
+        if (mediaStream) { mediaStream.getTracks().forEach(track => track.stop()); mediaStream = null; }
+      }
+
+      function stopListening() {
+        if (mediaRecorder && mediaRecorder.state !== 'inactive') mediaRecorder.stop();
+      }
+
+      async function processAudioRecording(audioBlob) {
+        setState('thinking');
+
+        try {
+          const formData = new FormData();
+          const fileExtension = audioBlob.type.includes('mp4') ? 'm4a' : 'webm';
+          formData.append('audio', audioBlob, 'speech.' + fileExtension);
+
+          if (!currentLang) {
+            const detectRes = await fetch('/api/detect', { method: 'POST', body: formData });
+            if (!detectRes.ok) throw new Error('Detect API error');
+            const detectData = await detectRes.json();
+            
+            if (detectData.lang) {
+              lockLanguage(detectData.lang);
+              return;
+            } else {
+              detectRetries++;
+              if (detectRetries <= 2) {
+                  setCaption("నమస్కారం / வணக்கம்");
+                  speakBilingualPrompt(function() {
+                      startListening();
+                  });
+                  langButtonsBox.classList.remove('hidden');
+              } else {
+                  setCaption("నమస్కారం / வணக்கம்");
+                  langButtonsBox.classList.remove('hidden');
+                  setState('idle');
+              }
+              return;
+            }
+          }
+
+          formData.append('lang', currentLang);
+          const sttRes = await fetch('/api/stt', { method: 'POST', body: formData });
+
+          if (!sttRes.ok) throw new Error('STT error: ' + sttRes.status);
+          const sttData = await sttRes.json();
+          const userTranscript = (sttData.text || '').trim();
+
+          const strings = UI_CONFIG[currentLang].ui_strings;
+
+          if (!userTranscript) {
+            setCaption(strings.didnt_hear);
+            lastSpokenText = strings.didnt_hear;
+            replayBtn.classList.remove('hidden');
+            speakText(strings.didnt_hear);
+            return;
+          }
+
+          conversationHistory.push({ role: 'user', content: userTranscript });
+
+          const chatRes = await fetch('/api/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ messages: conversationHistory, lang: currentLang })
+          });
+
+          if (!chatRes.ok) throw new Error('Chat error: ' + chatRes.status);
+
+          const chatData = await chatRes.json();
+          const reply = (chatData.reply || '').trim();
+          const docs = chatData.docs || [];
+          const place = (chatData.place || '').trim();
+
+          setCaption(reply);
+          renderDocs(docs);
+          renderPlace(place);
+
+          conversationHistory.push({ role: 'assistant', content: reply });
+
+          let textToSpeak = reply;
+          if (place) textToSpeak += ' ' + place;
+
+          lastSpokenText = textToSpeak;
+          replayBtn.classList.remove('hidden');
+
+          speakText(textToSpeak);
+        } catch (err) {
+          console.error('Processing error:', err);
+          const errStr = currentLang ? UI_CONFIG[currentLang].ui_strings.error : "Error";
+          setCaption(errStr);
+          lastSpokenText = errStr;
+          replayBtn.classList.remove('hidden');
+          speakText(errStr);
+        }
+      }
+
+      micBtn.addEventListener('click', function () {
+        if (currentState === 'thinking') return;
+        if (currentState === 'listening') { stopListening(); return; }
+        if (currentState === 'speaking') { stopCurrentAudio(); startListening(); return; }
+
+        if (!currentLang && detectRetries === 0) {
+          speakBilingualPrompt(function () {
+            startListening();
+          });
+          detectRetries = 1;
+        } else {
+          startListening();
+        }
+      });
+
+      replayBtn.addEventListener('click', function () {
+        if (currentState === 'thinking') return;
+        if (lastSpokenText) speakText(lastSpokenText);
+      });
+    })();
+  </script>
+</body>
+</html>
